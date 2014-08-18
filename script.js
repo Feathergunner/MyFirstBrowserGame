@@ -1,14 +1,3 @@
-/*
-function displayDate() {
-    obj = document.getElementById("date");
-	obj2 = document.getElementById("futdate");
-	var date  = Date.parse(new Date());
-	var date2 = new Date(date+10*60*1000);
-	
-	obj.innerHTML  = "current Time: " + new Date(date);
-	obj2.innerHTML = "In 10 Minuits its: " + date2;
-}
-*/
 
 var ver;
 var xp;
@@ -81,7 +70,7 @@ function work(dur){
 				var gain = myround(occ_dur*(100+xp)/100,2);
 				alert("Arbeit abgeschlossen. Du erhaelst "+gain+" Gold!");
 				gold += gain;
-				document.getElementById("but_work_1").value="1 Stunde Arbeit";			
+				document.getElementById("but_work_1").value="10 Minuten Arbeit";			
 				occ = 0;
 			}else{
 				alert("Beende erst die aktuelle Aktivitaet: "+getOccString(occ));
@@ -122,7 +111,7 @@ function train(dur){
 				var gain = myround(occ_dur/12,2);
 				alert("Training abgeschlossen. Du erhaelst "+gain+" Erfahrung!");
 				xp += gain;
-				document.getElementById("but_train_1").value="1 Stunde Training";
+				document.getElementById("but_train_1").value="10 Minuten Training";
 				occ = 0;
 			}else{
 				alert("Beende erst die aktuelle Aktivitaet: "+getOccString(occ));
@@ -156,7 +145,7 @@ function sleep(dur){
 				alert("Ausgeruht. Du erholst dich um "+gain+" Prozent!");
 				energy += gain;
 				if (energy > maxenergy) energy = maxenergy;
-				document.getElementById("but_sleep_1").value="1 Stunde Schlafen";
+				document.getElementById("but_sleep_1").value="10 Minuten Schlafen";
 				occ = 0;
 			}else{
 				alert("Beende erst die aktuelle Aktivitaet: "+getOccString(occ));
