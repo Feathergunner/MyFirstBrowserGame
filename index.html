@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MyFirstBrowserGame</title>
+	<script src="script.js" type="text/javascript" ></script>
+	<link rel="stylesheet" type="text/css" href="format.css">
+	<!--
+	<script type="text/javascript">
+		function init(){
+			document.getElementByID("p_level").innerHTML = "hay!";
+		}
+	</script>
+	-->
+</head>
+<body>
+	
+	<div class="head">
+		<h1>Hallo! Willkommen bei MyFirstBrowserGame.</h1>
+		<h6>Ver.0.1.2 "Kekse!"</h6>
+	</div>
+	<div class="main">
+		<p>Arbeite, um Geld zu verdienen.</p>
+		<p>Trainiere, um mehr Geld zu verdienen</p>
+		<p>Schlafe, um verlorene Energie zu regenerieren</p>
+		<p>Habe Glueck, um Diamanten zu bekommen</p>
+		
+		<table><tr>
+			<td>Erfahrung:</td>
+			<td id="pan_xp">init</td>
+			<td><input type="button" onclick="train(60)" value="1 Stunde Training" id="but_train_1"></td>
+			</tr><tr>
+			<td>Gold:</td>
+			<td id="pan_gold">init</td>
+			<td><input type="button" onclick="work(60)" value="1 Stunde Arbeit" id="but_work_1"></td>
+			</tr><tr>
+			<td>Diamanten:</td>
+			<td id="pan_dia">init</td>
+			</tr><tr>
+			<td>Energie:</td>
+			<td id="pan_en">init</td>
+			<td><input type="button" onclick="sleep(60)" value="1 Stunde Schlaf" id="but_sleep_1"></td>
+			</tr>
+			<td><input type="button" onclick="save()" value="speichern" id="save"></td>
+			<td><input type="button" onclick="load()" value="Laden" id="load"></td>
+		</table>
+		
+	</div>
+	
+	
+</body>
+<script type="text/javascript">
+	
+	init();
+	
+</script>
+</html> 
