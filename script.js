@@ -87,7 +87,7 @@ function train(dur){
 	if (occ===0){
 		occ_dur=dur;
 		var en_cost = dur;
-		var gold_cost = dur*xp;
+		var gold_cost = myround(dur*xp,2);
 		if (en_cost <= energy && gold_cost <= gold){
 			var r = confirm("Das kostet dich "+en_cost+" Energy und "+gold_cost+" Gold. Machen?");
 			if (r){
@@ -161,7 +161,7 @@ function sleep(dur){
 
 function save()
 {
-	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
+	var data = ver+"-"+myround(gold,0)+"-"+myround(xp,0)+"-"+dia+"-"+myround(energy,0)+"-"+maxenergy+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
 	document.cookie="Data="+data;
 	/*
 	document.cookie="gold="+gold;
