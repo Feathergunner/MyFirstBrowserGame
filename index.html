@@ -8,37 +8,96 @@
 <body>
 	
 	<div class="head">
-		<h1>Hallo! Willkommen bei MyFirstBrowserGame.</h1>
-		<h6>Ver.0.1.2 "Kekse!"</h6>
-	</div>
-	<div class="main">
-		<p>Arbeite, um Geld zu verdienen.</p>
-		<p>Trainiere, um mehr Geld zu verdienen</p>
-		<p>Schlafe, um verlorene Energie zu regenerieren</p>
-		<p>Habe Glueck, um Diamanten zu bekommen</p>
-		
-		<table><tr>
-			<td>Erfahrung:</td>
-			<td id="pan_xp">init</td>
-			<td><input type="button" onclick="train(10)" value="10 Minuten Training" id="but_train_1"></td>
-			</tr><tr>
-			<td>Gold:</td>
-			<td id="pan_gold">init</td>
-			<td><input type="button" onclick="work(10)" value="10 Minuten Arbeit" id="but_work_1"></td>
-			</tr><tr>
-			<td>Diamanten:</td>
-			<td id="pan_dia">init</td>
-			</tr><tr>
-			<td>Energie:</td>
-			<td id="pan_en">init</td>
-			<td><input type="button" onclick="sleep(10)" value="10 Minuten Schlaf" id="but_sleep_1"></td>
-			</tr>
-			<td><input type="button" onclick="save()" value="speichern" id="save"></td>
-			<td><input type="button" onclick="load()" value="Laden" id="load"></td>
-		</table>
-		
+		<marquee><h1>Hallo! Willkommen bei MyFirstBrowserGame.</h1></marquee>
+		<h6>Ver.0.1.3 "Design!"</h6>
 	</div>
 	
+	<div class="top">
+		<p>Arbeite, um Geld zu verdienen.</p>
+		<p>Lerne, um mehr Geld zu verdienen.</p>
+		<p>Trainiere, um mehr Energie zu bekommen.</p>
+		<p>Schlafe, um verlorene Energie zu regenerieren.</p>
+		<p>Habe Gl&uumlck, um Diamanten zu bekommen.</p>
+		<table width=100%>
+		<colgroup>
+			<col width=20%>
+			<col width=10%>
+			<col width=10%>
+			<col width=10%>
+			<col width=10%>
+			<col width=10%>
+			<col width=10%>
+			<col width=20%>
+		<colgroup>
+		<tr>
+			<td align="center">Erfahrung:</td>
+			<td align="left" id="pan_xp">init</td>
+			<td align="center">Gold:</td>
+			<td align="left" id="pan_gold">init</td>
+			<td align="center">Diamanten:</td>
+			<td align="left" id="pan_dia">init</td>
+			<td align="center">Energie:</td>
+			<td align="left" id="pan_en">init</td>
+		</tr></table>
+	</div>
+	
+	<div class="left">
+		<table id="l1" width=100%>
+			<tr><td><input type="button" onclick="save()" value="Speichern"></td></tr>
+			<tr><td><input type="button" onclick="load()" value="Laden"></td></tr>
+		</table>
+		
+		<table id="l2" width=100%><tr>
+			<td><input type="button" onclick="chooseNextOcc(1)" value="Arbeiten" id="but_l1"></td>
+			<td><input type="button" onclick="chooseNextOcc(2)" value="Lernen" id="but_l1"></td>
+		</tr><tr>
+			<td><input type="button" onclick="chooseNextOcc(3)" value="Trainieren" id="but_l1"></td>
+			<td><input type="button" onclick="chooseNextOcc(4)" value="Schlafen" id="but_l1"></td>
+		</tr></table>
+		
+		<table id="l3" width=100%><tr>
+			<td><h5>Aktuelle T&aumltigkeit:</h5></td>
+			<td align="right" id="pan_cur_occ"></td>
+		</tr><tr>
+			<td><h5>Verbleibende Zeit:</h5></td>
+			<td align="right" id="pan_cur_rest"></td>
+		</tr></table>
+	</div>
+	
+	<div class="activity">
+		<h3 id="r1">W&aumlle die Dauer deiner Aktivit&aumlt:</h3>
+		<table id="r2" width=90%>
+		<tr>
+			<th align="center">Dauer:</th><th align="center">Gewinn:</th><th align="center">Kosten:</th>
+		</tr>
+		<tr>
+			<td><input type="button" onclick="setOccDur(2)" value="2 Minuten"></td>
+			<td id="lab_setocc_eff_6"></td>
+			<td id="lab_setocc_cost_6"></td>
+		</tr><tr>
+			<td><input type="button" onclick="setOccDur(10)" value="10 Minuten"></td>
+			<td id="lab_setocc_eff_1"></td>
+			<td id="lab_setocc_cost_1"></td>
+		</tr><tr>
+			<td><input type="button" onclick="setOccDur(30)" value="30 Minuten"></td>
+			<td id="lab_setocc_eff_2"></td>
+			<td id="lab_setocc_cost_2"></td>
+		</tr><tr>
+			<td><input type="button" onclick="setOccDur(60)" value="60 Minuten"></td>
+			<td id="lab_setocc_eff_3"></td>
+			<td id="lab_setocc_cost_3"></td>
+		</tr><tr>
+			<td><input type="button" onclick="setOccDur(120)" value="120 Minuten"></td>
+			<td id="lab_setocc_eff_4"></td>
+			<td id="lab_setocc_cost_4"></td>
+		</tr><tr>
+			<td><input type="button" onclick="setOccDur(240)" value="240 Minuten"></td>
+			<td id="lab_setocc_eff_5"></td>
+			<td id="lab_setocc_cost_5"></td>
+		</tr><tr>
+		</table>
+		<p id="r3">W&aumlhle eine Aktivit&aumlt!</p>
+	</div>
 	
 </body>
 <script type="text/javascript">
