@@ -1,3 +1,7 @@
+*{
+	font-family:Verdana, Geneva, sans-serif;
+}
+
 html{
 	background-color:#002000;
 }
@@ -57,17 +61,19 @@ html{
 }
 .left>*{
 	color: #00FF00;
-	font-family: Impact;
 	font-size: 20px;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
 }
 
-input{
+input[type=button]{
+	background-color: #000050;
 	color: #00CC00;
-	font-family: Impact;
-	font-size: 20px;
+	box-shadow: 0px 0px 2px 2px #00A000;
+	border: 1px solid #00FF00;
+	border-radius: 5px;
+	font-size: 18px;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;

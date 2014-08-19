@@ -23,7 +23,7 @@ var nextdur;
 //var worktimer = setInterval(function() {startTimer()},1000);
 
 function init(){
-	ver = "0.1.3";
+	ver = "0.1.3c";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -79,7 +79,7 @@ function chooseNextOcc(newocc)
 				goldgets[i]=myround(durs[i]*(1+xp/1000),0);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = goldgets[i]+" Gold";
-				document.getElementById("lab_setocc_cost_"+i).innerHTML = encosts[i]+" Energy";
+				document.getElementById("lab_setocc_cost_"+i).innerHTML = encosts[i]+" Energie";
 			}
 			
 			if (nextocc===2){
@@ -88,7 +88,7 @@ function chooseNextOcc(newocc)
 				xpgets[i]=myround(durs[i],0);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
-				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energy";
+				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===3){
@@ -96,14 +96,14 @@ function chooseNextOcc(newocc)
 				goldcosts[i]=durs[i]/2;
 				encosts[i]=durs[i]*3;
 				
-				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energy";
-				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energy";
+				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energie";
+				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===4){
 				engets[i]=durs[i]*2;
 				
-				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" Energy";
+				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = "0";
 			}
 		}
