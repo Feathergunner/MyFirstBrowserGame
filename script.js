@@ -1,5 +1,6 @@
 
 var ver;
+var vertext;
 var xp;
 var gold;
 var dia;
@@ -23,7 +24,8 @@ var nextdur;
 //var worktimer = setInterval(function() {startTimer()},1000);
 
 function init(){
-	ver = "0.1.4b";
+	ver = "0.1.4c";
+	vertext = "Balance!";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -34,6 +36,8 @@ function init(){
 	occ_dur = 0;
 	occ_startTime = Date.parse(new Date(0));
 	updateLabel();
+	
+	document.getElementById("label_version".innerHTML= ver+" "+vertext;
 	
 	document.getElementById("r1").style.display="none";
 	document.getElementById("r2").style.display="none";
@@ -85,14 +89,14 @@ function chooseNextOcc(newocc)
 			if (nextocc===2){
 				encosts[i]=myround(durs[i]/3,0);
 				goldcosts[i]=myround(durs[i]+((durs[i]-1)*xp+Math.pow(durs[i],2)/2)/20,0);
-				xpgets[i]=floor(durs[i]);
+				xpgets[i]=Math.floor(durs[i]);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===3){
-				engets[i]=floor(durs[i]/10);
+				engets[i]=Math.floor(durs[i]/10);
 				goldcosts[i]=durs[i]/2;
 				encosts[i]=Math.floor((engets[i])*((maxenergy-80)+(engets[i]/2)));
 				
@@ -180,7 +184,7 @@ function startOcc()
 		
 		if (nextocc===3){
 			goldcost=nextdur/2;
-			var enget=floor(nextdur/10);
+			var enget=Math.floor(nextdur/10);
 			encost=Math.floor((enget)*((maxenergy-80)+(enget/2)));
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
@@ -222,13 +226,13 @@ function finishJob()
 	}
 	if (occ===2)
 	{
-		xpget=floor(occ_dur);
+		xpget=Math.floor(occ_dur);
 		xp += xpget;
 		finstr = "Fertig! Du erhaelst "+xpget+" Erfahrung.";
 	}
 	if (occ===3)
 	{
-		enget=floor(occ_dur/10);
+		enget=Math.floor(occ_dur/10);
 		maxenergy += enget;
 		finstr = "Fertig! Deine maximale Ernergie erhoeht sich um "+enget+".";
 	}
