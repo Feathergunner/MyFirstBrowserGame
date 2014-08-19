@@ -310,7 +310,7 @@ function startTimer()
 	//alert(timer");
 	if (occ>0){
 		var rest = occ_dur-myround((Date.parse(new Date())-occ_startTime)/60000,1);
-		if (rest>1) document.getElementById("pan_cur_rest").innerHTML = rest+" Minuten";
+		if (rest>1) document.getElementById("pan_cur_rest").innerHTML = rest.toFixed(1)+" Minuten";
 		else{
 			rest = (occ_dur*60)-myround((Date.parse(new Date())-occ_startTime)/1000,0);
 			if (rest>0) document.getElementById("pan_cur_rest").innerHTML = rest+" Sekunden";
@@ -336,7 +336,6 @@ function myround(a,b)
 		return (t2/t1);
 	}
 	*/
-	Alt:
 	return a.toFixed(b);
 }
 
