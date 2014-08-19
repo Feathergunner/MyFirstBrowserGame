@@ -23,7 +23,7 @@ var nextdur;
 //var worktimer = setInterval(function() {startTimer()},1000);
 
 function init(){
-	ver = "0.1.4";
+	ver = "0.1.4b";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -76,7 +76,6 @@ function chooseNextOcc(newocc)
 			if
 			 (nextocc===1){
 				encosts[i]=Math.ceil(Math.pow(durs[i],1.01));
-				//durs[i];
 				goldgets[i]=Math.floor(Math.pow(durs[i],1.05)*(1+xp/240));
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = goldgets[i]+" Gold";
@@ -86,19 +85,16 @@ function chooseNextOcc(newocc)
 			if (nextocc===2){
 				encosts[i]=myround(durs[i]/3,0);
 				goldcosts[i]=myround(durs[i]+((durs[i]-1)*xp+Math.pow(durs[i],2)/2)/20,0);
-				//(durs[i]-1)*xp+Math.pow(durs[i],2)/2,0);
-				xpgets[i]=myround(durs[i],0);
+				xpgets[i]=floor(durs[i]);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===3){
-				engets[i]=myround(durs[i]/10,0);
+				engets[i]=floor(durs[i]/10);
 				goldcosts[i]=durs[i]/2;
 				encosts[i]=Math.floor((engets[i])*((maxenergy-80)+(engets[i]/2)));
-				//Math.floor(((durs[i]-1)maxenergy+Math.pow(durs[i],2)/2)*3/100);
-				//durs[i]*3;
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
@@ -146,7 +142,7 @@ function startOcc()
 {
 	if (occ===0){
 		if (nextocc===1){
-			encost = nextdur;
+			encost = Math.ceil(Math.pow(nextdur,1.01));
 			if (energy >= encost){
 				var r = confirm("Das kostet dich "+encost+" Energie. Start?");
 				if (r){
@@ -164,7 +160,7 @@ function startOcc()
 		
 		if (nextocc===2){
 			encost   = myround(nextdur/3,0);
-			goldcost = myround(((nextdur-1)*xp+Math.pow(nextdur,2)/2),0);
+			goldcost = myround(nextdur+((nextdur-1)*xp+Math.pow(nextdur,2)/2)/20,0);
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -184,7 +180,8 @@ function startOcc()
 		
 		if (nextocc===3){
 			goldcost=nextdur/2;
-			encost=nextdur*3;
+			var enget=floor(nextdur/10);
+			encost=Math.floor((enget)*((maxenergy-80)+(enget/2)));
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -219,19 +216,19 @@ function finishJob()
 	var finstr;
 	if (occ===1)
 	{
-		goldget=myround(occ_dur*(1+xp/1000),0);
+		goldget=Math.floor(Math.pow(occ_dur,1.05)*(1+xp/240));
 		gold+=goldget;
 		finstr = "Fertig! Du erhaelst "+goldget+" Gold.";
 	}
 	if (occ===2)
 	{
-		xpget=myround(occ_dur,0);
+		xpget=floor(occ_dur);
 		xp += xpget;
 		finstr = "Fertig! Du erhaelst "+xpget+" Erfahrung.";
 	}
 	if (occ===3)
 	{
-		enget=myround(occ_dur/30,0);
+		enget=floor(occ_dur/10);
 		maxenergy += enget;
 		finstr = "Fertig! Deine maximale Ernergie erhoeht sich um "+enget+".";
 	}
