@@ -37,7 +37,7 @@ function init(){
 	occ_startTime = Date.parse(new Date(0));
 	updateLabel();
 	
-	document.getElementById("label_version".innerHTML= ver+" "+vertext;
+	document.getElementById("label_version").innerHTML= ver+" "+vertext;
 	
 	document.getElementById("r1").style.display="none";
 	document.getElementById("r2").style.display="none";
