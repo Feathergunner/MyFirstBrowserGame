@@ -23,7 +23,7 @@ var nextdur;
 //var worktimer = setInterval(function() {startTimer()},1000);
 
 function init(){
-	ver = "0.1.3c";
+	ver = "0.1.4";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -75,8 +75,9 @@ function chooseNextOcc(newocc)
 		for (i=1; i<7; i++){
 			if
 			 (nextocc===1){
-				encosts[i]=durs[i];
-				goldgets[i]=myround(durs[i]*(1+xp/1000),0);
+				encosts[i]=Math.ceil(Math.pow(durs[i],1.01));
+				//durs[i];
+				goldgets[i]=Math.floor(Math.pow(durs[i],1.05)*(1+xp/240));
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = goldgets[i]+" Gold";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = encosts[i]+" Energie";
@@ -84,7 +85,8 @@ function chooseNextOcc(newocc)
 			
 			if (nextocc===2){
 				encosts[i]=myround(durs[i]/3,0);
-				goldcosts[i]=myround(durs[i]*(xp+1),0);
+				goldcosts[i]=myround(durs[i]+((durs[i]-1)*xp+Math.pow(durs[i],2)/2)/20,0);
+				//(durs[i]-1)*xp+Math.pow(durs[i],2)/2,0);
 				xpgets[i]=myround(durs[i],0);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
@@ -92,9 +94,11 @@ function chooseNextOcc(newocc)
 			}
 			
 			if (nextocc===3){
-				engets[i]=myround(durs[i]/30,0);
+				engets[i]=myround(durs[i]/10,0);
 				goldcosts[i]=durs[i]/2;
-				encosts[i]=durs[i]*3;
+				encosts[i]=Math.floor((engets[i])*((maxenergy-80)+(engets[i]/2)));
+				//Math.floor(((durs[i]-1)maxenergy+Math.pow(durs[i],2)/2)*3/100);
+				//durs[i]*3;
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
@@ -141,7 +145,7 @@ function setOccDur(newdur)
 function startOcc()
 {
 	if (occ===0){
-	if (nextocc===1){
+		if (nextocc===1){
 			encost = nextdur;
 			if (energy >= encost){
 				var r = confirm("Das kostet dich "+encost+" Energie. Start?");
@@ -154,57 +158,59 @@ function startOcc()
 					return true;
 				}
 			}else{
-				alert("Nicht ausreichend Energie &uumlbrig!");
+				alert("Nicht ausreichend Energie uebrig!");
 			}
-	}
-	if (nextocc===2){
-		encost   = myround(nextdur/3,0);
-		goldcost = myround(nextdur*(xp+1),0);
-		if (energy >= encost && gold >= goldcost){
-			var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
-			if(r){
-				occ = 2;
+		}
+		
+		if (nextocc===2){
+			encost   = myround(nextdur/3,0);
+			goldcost = myround(((nextdur-1)*xp+Math.pow(nextdur,2)/2),0);
+			if (energy >= encost && gold >= goldcost){
+				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
+				if(r){
+					occ = 2;
+					occ_dur=nextdur;
+					occ_startTime = Date.parse(new Date());
+					energy -=encost;
+					gold -= goldcost;
+					alert("Du Lernst nun fuer "+occ_dur+" Minuten!");
+					return true;
+				}
+			}else{
+				if (energy < encost) alert("Nicht ausreichend Energie!");
+				if (gold < goldcost) alert("Nicht ausreichend Gold!");
+			}
+		}
+		
+		if (nextocc===3){
+			goldcost=nextdur/2;
+			encost=nextdur*3;
+			if (energy >= encost && gold >= goldcost){
+				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
+				if(r){
+					occ = 3;
+					occ_dur=nextdur;
+					occ_startTime = Date.parse(new Date());
+					energy -=encost;
+					gold -= goldcost;
+					alert("Du Trainierst nun fuer "+occ_dur+" Minuten!");
+					return true;
+				}
+			}else{
+				if (energy < encost) alert("Nicht ausreichend Energie!");
+				if (gold < goldcost) alert("Nicht ausreichend Gold!");
+			}
+		}
+		if (nextocc===4){
+			var r = confirm("Du schlaefst nun "+nextdur+" Minuten. Machen?");
+			if (r){
+				occ = 4;
 				occ_dur=nextdur;
 				occ_startTime = Date.parse(new Date());
-				energy -=encost;
-				gold -= goldcost;
-				alert("Du Lernst nun fuer "+occ_dur+" Minuten!");
+				alert("Du schlaefst nun fuer "+occ_dur+" Minuten!");
 				return true;
 			}
-		}else{
-			if (energy < encost) alert("Nicht ausreichend Energie!");
-			if (gold < goldcost) alert("Nicht ausreichend Gold!");
 		}
-	}
-	if (nextocc===3){
-		goldcost=nextdur/2;
-		encost=nextdur*3;
-		if (energy >= encost && gold >= goldcost){
-			var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
-			if(r){
-				occ = 3;
-				occ_dur=nextdur;
-				occ_startTime = Date.parse(new Date());
-				energy -=encost;
-				gold -= goldcost;
-				alert("Du Trainierst nun fuer "+occ_dur+" Minuten!");
-				return true;
-			}
-		}else{
-			if (energy < encost) alert("Nicht ausreichend Energie!");
-			if (gold < goldcost) alert("Nicht ausreichend Gold!");
-		}
-	}
-	if (nextocc===4){
-		var r = confirm("Du schlaefst nun "+nextdur+" Minuten. Machen?");
-		if (r){
-			occ = 4;
-			occ_dur=nextdur;
-			occ_startTime = Date.parse(new Date());
-			alert("Du schlaefst nun fuer "+occ_dur+" Minuten!");
-			return true;
-		}
-	}
 	}
 }
 
@@ -320,9 +326,16 @@ function stopTimer()
 
 function myround(a,b)
 {
-var t1 = Math.pow(10,b);
-var t2 = Math.round(a*t1);
-return (t2/t1);
+	if (b===0) return Math.floor(a);
+	else{
+		var t1 = Math.pow(10,b);
+		var t2 = Math.floor(a*t1);
+		return (t2/t1);
+	}
+	/*
+	Alt:
+	return a.toFixed(b);
+	*/
 }
 
 function getDatePlus(plus)
