@@ -327,16 +327,17 @@ function stopTimer()
 
 function myround(a,b)
 {
+	/*
+	Old:
 	if (b===0) return Math.floor(a);
 	else{
 		var t1 = Math.pow(10,b);
 		var t2 = Math.floor(a*t1);
 		return (t2/t1);
 	}
-	/*
+	*/
 	Alt:
 	return a.toFixed(b);
-	*/
 }
 
 function getDatePlus(plus)
