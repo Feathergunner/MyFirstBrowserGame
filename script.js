@@ -250,12 +250,7 @@ function createMission()
 	curMissObj = "Energie";
 	curMissAim = 10+Math.floor((maxenergy-20)*Math.random());
 	
-	var startTime = getTimeString(curMissStart);
-	var endTime = getTimeString(curMissStart+missionTimeRange*60*1000);
-	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
-	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange)+".";
-	document.getElementById("but_Miss_exec").style.display="none";
-	setTimeout(function() {criticalMissionTime();}, randTimeOffset*60*1000);
+	updateMissionLabel()
 }
 
 function criticalMissionTime()
@@ -306,7 +301,11 @@ function load()
 	occ    = parseInt(datas[6]);
 	occ_dur = parseInt(datas[7]);
 	occ_startTime = parseInt(datas[8]);
-	updateLabel();
+	
+	var version = datas[0].split(".");
+	var main = parseInt(version[0]);
+	var mile = parseInt(version[1]);
+	var step = parseInt(version[2]);
 	
 	if(occ>0){
 		document.getElementById("r1").style.display="none";
@@ -326,7 +325,20 @@ function load()
 		document.getElementById("l3").style.display="none";
 	}
 	
-	createMission();
+	if (main===0 && mile ===0 && step<6){
+		createMission();
+	}else{
+		curMissStart = parseInt(datas[9]);
+		if (curMissStart - Date.parse(new Date()) < 5000){
+			createMission();
+		}else{
+		curMissAim = parseInt(datas[10]);
+		curMissObj = "Energie";
+		}
+	}
+	
+	updateLabel();
+	updateMissionLabel();
 	alert("Spielstand geladen!");
 }
 
@@ -336,7 +348,7 @@ function load()
 
 function init()
 {
-	ver = "0.1.5b";
+	ver = "0.1.6";
 	vertext = "Challenging!";
 	xp = 0;
 	gold = 0;
@@ -347,11 +359,12 @@ function init()
 	nextocc = 0;
 	occ_dur = 0;
 	occ_startTime = Date.parse(new Date(0));
-	updateLabel();
 	
 	missionTimeRange = 10;
 	missionAimRange = 10;
 	createMission();
+	
+	updateLabel();
 	
 	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
 	
@@ -381,6 +394,17 @@ function updateLabel()
 	document.getElementById("pan_gold").innerHTML = gold;
 	document.getElementById("pan_dia").innerHTML = dia;
 	document.getElementById("pan_en").innerHTML = energy + "/" + maxenergy;
+}
+
+function updateMissionLabel()
+{
+	var timeOffset = curMissStart - Date.parse(new Date());
+	var startTime = getTimeString(curMissStart);
+	var endTime = getTimeString(curMissStart+missionTimeRange*60*1000);
+	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
+	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange)+".";
+	document.getElementById("but_Miss_exec").style.display="none";
+	setTimeout(function() {criticalMissionTime();}, timeOffset);
 }
 
 function getTimeString(timeInMS)
