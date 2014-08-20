@@ -282,7 +282,10 @@ function executeMission()
 
 function save()
 {
-	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy+"-"+occ+"-"+occ_dur+"-"+occ_startTime+"-"+curMissStart+"-"+curMissAim;
+	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy;
+	data = data+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
+	data = data+"-"+curMissStart+"-"+curMissAim;
+	
 	var expire = new Date(getDatePlus(1000*60*60*24*365));
 	data +="; expires="+expire.toGMTString();
 	//alert(data);
@@ -404,10 +407,8 @@ function myround(a,b)
 	return a.toFixed(b);
 }
 
-/*
 function getDatePlus(plus)
 {
 	var time=Date.parse(new Date())+plus;
 	return time;
 }
-*/
