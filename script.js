@@ -10,6 +10,8 @@ var energy;
 var curMissStart;
 var curMissObj;
 var curMissAim;
+var missionTimeRange;
+var missionAimRange;
 
 var occ;
 /*
@@ -25,51 +27,9 @@ var occ_dur;
 var nextocc;
 var nextdur;
 
-//var worktimer = setInterval(function() {startTimer()},1000);
-
-function init(){
-	ver = "0.1.5";
-	vertext = "Challenging!";
-	xp = 0;
-	gold = 0;
-	dia = 0;
-	maxenergy=100;
-	energy = maxenergy;
-	occ = 0;
-	nextocc = 0;
-	occ_dur = 0;
-	occ_startTime = Date.parse(new Date(0));
-	updateLabel();
-	
-	createMission();
-	
-	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
-	
-	document.getElementById("r1").style.display="none";
-	document.getElementById("r2").style.display="none";
-	
-	document.getElementById("l3").style.display="none";
-}
-
-function getOccString(occ){
-	if (occ===0)
-		return "none";
-	if (occ===1)
-		return "Arbeit";
-	if (occ===2)
-		return "Lernen";
-	if (occ===3)
-		return "Training";
-	if (occ===4)
-		return "Schlafen";
-}
-
-function updateLabel(){
-	document.getElementById("pan_xp").innerHTML = xp;
-	document.getElementById("pan_gold").innerHTML = gold;
-	document.getElementById("pan_dia").innerHTML = dia;
-	document.getElementById("pan_en").innerHTML = energy + "/" + maxenergy;
-}
+/*
+	Auswahl und Durchfuehrung von Aktivitaeten
+*/
 
 function chooseNextOcc(newocc)
 {
@@ -222,6 +182,20 @@ function startOcc()
 	}
 }
 
+function startTimer()
+{
+	//alert(timer");
+	if (occ>0){
+		var rest = occ_dur-myround((Date.parse(new Date())-occ_startTime)/60000,1);
+		if (rest>1) document.getElementById("pan_cur_rest").innerHTML = rest.toFixed(1)+" Minuten";
+		else{
+			rest = (occ_dur*60)-myround((Date.parse(new Date())-occ_startTime)/1000,0);
+			if (rest>0) document.getElementById("pan_cur_rest").innerHTML = rest+" Sekunden";
+			else finishJob();
+		}
+	}
+}
+
 function finishJob()
 {
 	var finstr;
@@ -264,6 +238,10 @@ function finishJob()
 	alert(finstr);
 }
 
+/*
+	Missionen
+*/
+
 function createMission()
 {
 	var randTimeOffset = 30+Math.floor(30*Math.random());
@@ -271,10 +249,11 @@ function createMission()
 	curMissStart = d+(randTimeOffset*60*1000);
 	curMissObj = "Energie";
 	curMissAim = 10+Math.floor((maxenergy-20)*Math.random());
-	var startTime= new Date(curMissStart).getHours()+":"+new Date(curMissStart).getMinutes();
-	var endTime = new Date(curMissStart+5*60*1000).getHours()+":"+new Date(curMissStart+5*60*1000).getMinutes();
+	
+	var startTime = getTimeString(curMissStart);
+	var endTime = getTimeString(curMissStart+missionTimeRange*60*1000);
 	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
-	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+5)+".";
+	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange)+".";
 	document.getElementById("but_Miss_exec").style.display="none";
 	setTimeout(function() {criticalMissionTime();}, randTimeOffset*60*1000);
 }
@@ -282,12 +261,12 @@ function createMission()
 function criticalMissionTime()
 {
 	document.getElementById("but_Miss_exec").style.display="inline";
-	itv = setTimeout(function() {createMission();}, 5*60*1000);
+	itv = setTimeout(function() {createMission();}, missionTimeRange*60*1000);
 }
 
 function executeMission()
 {
-	if (energy>=curMissAim && energy <= curMissAim+5){
+	if (energy>=curMissAim && energy <= curMissAim+missionAimRange){
 		dia+=1;
 		alert("Mission erfolgreich erfuellt. Du erhaelst 1 Diamanten!");
 	}else{
@@ -296,6 +275,10 @@ function executeMission()
 	updateLabel();
 	document.getElementById("but_Miss_exec").style.display="none";
 }
+
+/*
+	Laden und Speichern
+*/
 
 function save()
 {
@@ -344,25 +327,67 @@ function load()
 	alert("Spielstand geladen!");
 }
 
+/*
+	Hilfsfunktionen
+*/
 
-function startTimer()
+function init()
 {
-	//alert(timer");
-	if (occ>0){
-		var rest = occ_dur-myround((Date.parse(new Date())-occ_startTime)/60000,1);
-		if (rest>1) document.getElementById("pan_cur_rest").innerHTML = rest.toFixed(1)+" Minuten";
-		else{
-			rest = (occ_dur*60)-myround((Date.parse(new Date())-occ_startTime)/1000,0);
-			if (rest>0) document.getElementById("pan_cur_rest").innerHTML = rest+" Sekunden";
-			else finishJob();
-		}
-	}
+	ver = "0.1.5b";
+	vertext = "Challenging!";
+	xp = 0;
+	gold = 0;
+	dia = 0;
+	maxenergy=100;
+	energy = maxenergy;
+	occ = 0;
+	nextocc = 0;
+	occ_dur = 0;
+	occ_startTime = Date.parse(new Date(0));
+	updateLabel();
+	
+	missionTimeRange = 10;
+	missionAimRange = 10;
+	createMission();
+	
+	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
+	
+	document.getElementById("r1").style.display="none";
+	document.getElementById("r2").style.display="none";
+	
+	document.getElementById("l3").style.display="none";
 }
 
-function stopTimer()
+function getOccString(occ)
 {
-	//clearInterval(worktimer);
-	finishJob();
+	if (occ===0)
+		return "none";
+	if (occ===1)
+		return "Arbeit";
+	if (occ===2)
+		return "Lernen";
+	if (occ===3)
+		return "Training";
+	if (occ===4)
+		return "Schlafen";
+}
+
+function updateLabel()
+{
+	document.getElementById("pan_xp").innerHTML = xp;
+	document.getElementById("pan_gold").innerHTML = gold;
+	document.getElementById("pan_dia").innerHTML = dia;
+	document.getElementById("pan_en").innerHTML = energy + "/" + maxenergy;
+}
+
+function getTimeString(timeInMS)
+{
+	var d=new Date(timeInMS);
+	var hours = d.getHours().toString();
+	var minutes = d.getMinutes().toString();
+	if (hours.length === 1) hours = "0"+hours;
+	if (minutes.length === 1) minutes = "0"+minutes;
+	return hours+":"+minutes;
 }
 
 function myround(a,b)
@@ -379,8 +404,10 @@ function myround(a,b)
 	return a.toFixed(b);
 }
 
+/*
 function getDatePlus(plus)
 {
 	var time=Date.parse(new Date())+plus;
 	return time;
 }
+*/
