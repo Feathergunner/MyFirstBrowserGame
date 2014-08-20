@@ -325,7 +325,7 @@ function load()
 		document.getElementById("l3").style.display="none";
 	}
 	
-	if (main===0 && mile ===1 && step<6){
+	if (main===0 && mile <=1 && step<6){
 		createMission();
 	}else{
 		curMissStart = parseInt(datas[9]);
