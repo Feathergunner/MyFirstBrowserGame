@@ -282,7 +282,7 @@ function executeMission()
 
 function save()
 {
-	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
+	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy+"-"+occ+"-"+occ_dur+"-"+occ_startTime+"-"+curMissStart+"-"+curMissAim;
 	var expire = new Date(getDatePlus(1000*60*60*24*365));
 	data +="; expires="+expire.toGMTString();
 	//alert(data);
