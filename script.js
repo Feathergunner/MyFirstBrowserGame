@@ -7,6 +7,10 @@ var dia;
 var maxenergy;
 var energy;
 
+var curMissStart;
+var curMissObj;
+var curMissAim;
+
 var occ;
 /*
 	0 = none
@@ -24,8 +28,8 @@ var nextdur;
 //var worktimer = setInterval(function() {startTimer()},1000);
 
 function init(){
-	ver = "0.1.4c";
-	vertext = "Balance!";
+	ver = "0.1.5";
+	vertext = "Challenging!";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -37,7 +41,9 @@ function init(){
 	occ_startTime = Date.parse(new Date(0));
 	updateLabel();
 	
-	document.getElementById("label_version").innerHTML= ver+" "+vertext;
+	createMission();
+	
+	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
 	
 	document.getElementById("r1").style.display="none";
 	document.getElementById("r2").style.display="none";
@@ -69,7 +75,7 @@ function chooseNextOcc(newocc)
 {
 	nextocc = newocc;
 	if (occ===0){
-		var durs = [0, 10, 30, 60, 120, 240, 2];
+		var durs = [0, 10, 30, 60, 120, 240, 480];
 		var encosts   = [0];
 		var engets    = [0];
 		var goldcosts = [0];
@@ -79,33 +85,34 @@ function chooseNextOcc(newocc)
 		for (i=1; i<7; i++){
 			if
 			 (nextocc===1){
-				encosts[i]=Math.ceil(Math.pow(durs[i],1.01));
-				goldgets[i]=Math.floor(Math.pow(durs[i],1.05)*(1+xp/240));
+				encosts[i]=Math.ceil(Math.pow(durs[i]*1.2,0.98));
+				goldgets[i]=Math.floor(Math.pow(durs[i]*0.9,1.05)*(1+xp/240));
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = goldgets[i]+" Gold";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = encosts[i]+" Energie";
 			}
 			
 			if (nextocc===2){
-				encosts[i]=myround(durs[i]/3,0);
-				goldcosts[i]=myround(durs[i]+((durs[i]-1)*xp+Math.pow(durs[i],2)/2)/20,0);
-				xpgets[i]=Math.floor(durs[i]);
+				encosts[i]=Math.floor(1+Math.pow(durs[i]/2.5,0.9));
+				goldcosts[i]=Math.floor(durs[i]+((durs[i]-1)*Math.pow(xp,1.2)+Math.pow(durs[i],2)/2)/20);
+				xpgets[i]=Math.floor(durs[i]*5/6);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===3){
-				engets[i]=Math.floor(durs[i]/10);
-				goldcosts[i]=durs[i]/2;
-				encosts[i]=Math.floor((engets[i])*((maxenergy-80)+(engets[i]/2)));
+				engets[i]=Math.floor(Math.pow(durs[i]/60*7,1.05));
+				goldcosts[i]=Math.floor(engets[i]*((maxenergy-98)+(engets[i]/2))/3);
+				//encosts[i]=Math.floor((engets[i]/2)*((maxenergy-80)+(engets[i]/2)));
+				encosts[i]=Math.floor(5*(Math.pow(maxenergy-99+engets[i],0.95)-Math.pow(maxenergy-99,0.95)));
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===4){
-				engets[i]=durs[i]*2;
+				engets[i]=Math.floor(Math.pow(durs[i]/6*5,1.02));
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = "0";
@@ -146,7 +153,7 @@ function startOcc()
 {
 	if (occ===0){
 		if (nextocc===1){
-			encost = Math.ceil(Math.pow(nextdur,1.01));
+			encost = Math.ceil(Math.pow(nextdur*1.2,0.98));
 			if (energy >= encost){
 				var r = confirm("Das kostet dich "+encost+" Energie. Start?");
 				if (r){
@@ -163,8 +170,8 @@ function startOcc()
 		}
 		
 		if (nextocc===2){
-			encost   = myround(nextdur/3,0);
-			goldcost = myround(nextdur+((nextdur-1)*xp+Math.pow(nextdur,2)/2)/20,0);
+			encost   = Math.floor(1+Math.pow(nextdur/2.5,0.9));
+			goldcost = Math.floor(nextdur+((nextdur-1)*Math.pow(xp,1.2)+Math.pow(nextdur,2)/2)/20);
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -183,9 +190,9 @@ function startOcc()
 		}
 		
 		if (nextocc===3){
-			goldcost=nextdur/2;
-			var enget=Math.floor(nextdur/10);
-			encost=Math.floor((enget)*((maxenergy-80)+(enget/2)));
+			var enget=Math.floor(Math.pow(nextdur/60*7,1.05));
+			goldcost=Math.floor(enget*((maxenergy-98)+(enget/2))/3);
+			encost=Math.floor(5*(Math.pow(maxenergy-99+enget,0.95)-Math.pow(maxenergy-99,0.95)));
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -220,25 +227,25 @@ function finishJob()
 	var finstr;
 	if (occ===1)
 	{
-		goldget=Math.floor(Math.pow(occ_dur,1.05)*(1+xp/240));
+		goldget=Math.floor(Math.pow(occ_dur*0.9,1.05)*(1+xp/240));
 		gold+=goldget;
 		finstr = "Fertig! Du erhaelst "+goldget+" Gold.";
 	}
 	if (occ===2)
 	{
-		xpget=Math.floor(occ_dur);
+		xpget=Math.floor(occ_dur*5/6);
 		xp += xpget;
 		finstr = "Fertig! Du erhaelst "+xpget+" Erfahrung.";
 	}
 	if (occ===3)
 	{
-		enget=Math.floor(occ_dur/10);
+		enget=Math.floor(Math.pow(occ_dur/60*7,1.05));
 		maxenergy += enget;
 		finstr = "Fertig! Deine maximale Ernergie erhoeht sich um "+enget+".";
 	}
 	if (occ===4)
 	{
-		enget=occ_dur*2;
+		enget=Math.floor(Math.pow(occ_dur/6*5,1.02));
 		if (energy+enget > maxenergy) enget = maxenergy-energy;
 		energy += enget;
 		finstr = "Fertig! Du regenerierst "+enget+" Energie.";
@@ -257,6 +264,38 @@ function finishJob()
 	alert(finstr);
 }
 
+function createMission()
+{
+	var randTimeOffset = 30+Math.floor(30*Math.random());
+	var d= Date.parse(new Date());
+	curMissStart = d+(randTimeOffset*60*1000);
+	curMissObj = "Energie";
+	curMissAim = 10+Math.floor((maxenergy-20)*Math.random());
+	var startTime= new Date(curMissStart).getHours()+":"+new Date(curMissStart).getMinutes();
+	var endTime = new Date(curMissStart+5*60*1000).getHours()+":"+new Date(curMissStart+5*60*1000).getMinutes();
+	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
+	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+5)+".";
+	document.getElementById("but_Miss_exec").style.display="none";
+	setTimeout(function() {criticalMissionTime();}, randTimeOffset*60*1000);
+}
+
+function criticalMissionTime()
+{
+	document.getElementById("but_Miss_exec").style.display="inline";
+	itv = setTimeout(function() {createMission();}, 5*60*1000);
+}
+
+function executeMission()
+{
+	if (energy>=curMissAim && energy <= curMissAim+5){
+		dia+=1;
+		alert("Mission erfolgreich erfuellt. Du erhaelst 1 Diamanten!");
+	}else{
+		alert("Missionsbedingungen wurden nicht erfuellt!");
+	}
+	updateLabel();
+	document.getElementById("but_Miss_exec").style.display="none";
+}
 
 function save()
 {

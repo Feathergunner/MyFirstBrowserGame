@@ -19,26 +19,27 @@
 		<p>Schlafe, um verlorene Energie zu regenerieren.</p>
 		<p>Habe Gl&uumlck, um Diamanten zu bekommen.</p>
 		<table width=100%>
-		<colgroup>
-			<col width=20%>
-			<col width=10%>
-			<col width=10%>
-			<col width=10%>
-			<col width=10%>
-			<col width=10%>
-			<col width=10%>
-			<col width=20%>
-		<colgroup>
-		<tr>
-			<td align="center">Erfahrung:</td>
-			<td align="left" id="pan_xp">init</td>
-			<td align="center">Gold:</td>
-			<td align="left" id="pan_gold">init</td>
-			<td align="center">Diamanten:</td>
-			<td align="left" id="pan_dia">init</td>
-			<td align="center">Energie:</td>
-			<td align="left" id="pan_en">init</td>
-		</tr></table>
+			<colgroup>
+				<col width=20%>
+				<col width=10%>
+				<col width=10%>
+				<col width=10%>
+				<col width=10%>
+				<col width=10%>
+				<col width=10%>
+				<col width=20%>
+			</colgroup>
+			<tr>
+				<td align="center">Erfahrung:</td>
+				<td align="left" id="pan_xp">init</td>
+				<td align="center">Gold:</td>
+				<td align="left" id="pan_gold">init</td>
+				<td align="center">Diamanten:</td>
+				<td align="left" id="pan_dia">init</td>
+				<td align="center">Energie:</td>
+				<td align="left" id="pan_en">init</td>
+			</tr>
+		</table>
 	</div>
 	
 	<div class="left">
@@ -62,6 +63,20 @@
 			<td><h5>Verbleibende Zeit:</h5></td>
 			<td align="right" id="pan_cur_rest"></td>
 		</tr></table>
+		
+		<div id="l4">
+			<h4>Auftrag:</h4>
+			<table class="mission" width = 100%><tr>
+				<td align="left">Erf&uumllle im Zeitfenster:</td>
+			</tr><tr>
+				<td align="right" id="pan_cur_miss_time"></td>
+			</tr><tr>
+				<td align="left">die Bedingung:</td>
+			</tr><tr>
+				<td align="right" id="pan_cur_miss_obj"></td>
+			</tr></table>
+			<input type="button" onclick="executeMission()" value="Auftrag abgeben" id ="but_Miss_exec">
+		</div>
 	</div>
 	
 	<div class="activity">
@@ -69,11 +84,6 @@
 		<table id="r2" width=90%>
 		<tr>
 			<th align="center">Dauer:</th><th align="center">Gewinn:</th><th align="center">Kosten:</th>
-		</tr>
-		<tr>
-			<td><input type="button" onclick="setOccDur(2)" value="2 Minuten"></td>
-			<td id="lab_setocc_eff_6"></td>
-			<td id="lab_setocc_cost_6"></td>
 		</tr><tr>
 			<td><input type="button" onclick="setOccDur(10)" value="10 Minuten"></td>
 			<td id="lab_setocc_eff_1"></td>
@@ -83,26 +93,28 @@
 			<td id="lab_setocc_eff_2"></td>
 			<td id="lab_setocc_cost_2"></td>
 		</tr><tr>
-			<td><input type="button" onclick="setOccDur(60)" value="60 Minuten"></td>
+			<td><input type="button" onclick="setOccDur(60)" value="1 Stunde"></td>
 			<td id="lab_setocc_eff_3"></td>
 			<td id="lab_setocc_cost_3"></td>
 		</tr><tr>
-			<td><input type="button" onclick="setOccDur(120)" value="120 Minuten"></td>
+			<td><input type="button" onclick="setOccDur(120)" value="2 Stunden"></td>
 			<td id="lab_setocc_eff_4"></td>
 			<td id="lab_setocc_cost_4"></td>
 		</tr><tr>
-			<td><input type="button" onclick="setOccDur(240)" value="240 Minuten"></td>
+			<td><input type="button" onclick="setOccDur(240)" value="4 Stunden"></td>
 			<td id="lab_setocc_eff_5"></td>
 			<td id="lab_setocc_cost_5"></td>
 		</tr><tr>
+			<td><input type="button" onclick="setOccDur(480)" value="8 Stunden"></td>
+			<td id="lab_setocc_eff_6"></td>
+			<td id="lab_setocc_cost_6"></td>
+		</tr>
 		</table>
 		<p id="r3">W&aumlhle eine Aktivit&aumlt!</p>
 	</div>
 	
 </body>
 <script type="text/javascript">
-	
 	init();
-	
 </script>
 </html> 

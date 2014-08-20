@@ -97,3 +97,14 @@ input[type=button]{
 	
 	text-align:center;
 }
+
+#l4{
+	width:92%;
+	margin: 2% 2% 2% 2%;
+	border: 1px solid #004000;
+	border-radius: 1%;
+	
+	padding: 2% 2% 2% 2%;
+	
+	font-size: 16px;
+}
