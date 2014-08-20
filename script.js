@@ -340,6 +340,7 @@ function load()
 		document.getElementById("l3").style.display="none";
 	}
 	
+	createMission();
 	alert("Spielstand geladen!");
 }
 
