@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MyFirstBrowserGame</title>
+	<title id="title">MyFirstBrowserGame</title>
 	<script src="script.js" type="text/javascript" ></script>
 	<link rel="stylesheet" type="text/css" href="format.css">
 </head>
@@ -17,7 +17,7 @@
 		<p>Lerne, um mehr Geld zu verdienen.</p>
 		<p>Trainiere, um mehr Energie zu bekommen.</p>
 		<p>Schlafe, um verlorene Energie zu regenerieren.</p>
-		<p>Habe Gl&uumlck, um Diamanten zu bekommen.</p>
+		<p>Erf&uumllle Auftr&aumlge, um Diamanten zu bekommen.</p>
 		<table width=100%>
 			<colgroup>
 				<col width=20%>
@@ -43,12 +43,18 @@
 	</div>
 	
 	<div class="left">
-		<table id="l1" width=100%>
-			<tr><td><input type="button" onclick="save()" value="Speichern"></td></tr>
-			<tr><td><input type="button" onclick="load()" value="Laden"></td></tr>
+		<table id="l1" width=100%><caption>Spielstand</caption>
+			<tr>
+			<td><input type="button" onclick="saveToCookie()" value="Speichern"></td>
+			<td><input type="button" onclick="exportData()" value="Exportieren"></td>
+			</tr><tr>
+			<td><input type="button" onclick="load_FromCookie()" value="Laden"></td>
+			<td><input type="button" onclick="importData()" value="Importieren"></td>
+			</tr>
 		</table>
 		
-		<table id="l2" width=100%><tr>
+		<table id="l2" width=100%><caption>Aktionen</caption>
+		<tr>
 			<td><input type="button" onclick="chooseNextOcc(1)" value="Arbeiten" id="but_l1"></td>
 			<td><input type="button" onclick="chooseNextOcc(2)" value="Lernen" id="but_l1"></td>
 		</tr><tr>

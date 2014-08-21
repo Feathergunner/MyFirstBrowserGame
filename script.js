@@ -12,6 +12,7 @@ var curMissObj;
 var curMissAim;
 var missionTimeRange;
 var missionAimRange;
+var curMissTimer;
 
 var occ;
 /*
@@ -26,6 +27,8 @@ var occ_dur;
 
 var nextocc;
 var nextdur;
+
+var skey;
 
 /*
 	Auswahl und Durchfuehrung von Aktivitaeten
@@ -45,40 +48,38 @@ function chooseNextOcc(newocc)
 		for (i=1; i<7; i++){
 			if
 			 (nextocc===1){
-				encosts[i]=Math.ceil(Math.pow(durs[i]*1.2,0.98));
-				goldgets[i]=Math.floor(Math.pow(durs[i]*0.9,1.05)*(1+xp/240));
+				encosts[i]  = compWork_cost_EN(durs[i]);
+				goldgets[i] = compWork_gain_GO(durs[i], xp);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = goldgets[i]+" Gold";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = encosts[i]+" Energie";
 			}
 			
 			if (nextocc===2){
-				encosts[i]=Math.floor(1+Math.pow(durs[i]/2.5,0.9));
-				goldcosts[i]=Math.floor(durs[i]+((durs[i]-1)*Math.pow(xp,1.2)+Math.pow(durs[i],2)/2)/20);
-				xpgets[i]=Math.floor(durs[i]*5/6);
+				xpgets[i]    = compLearn_gain_XP(durs[i]);
+				encosts[i]   = compLearn_cost_EN(durs[i]);
+				goldcosts[i] = compLearn_cost_GO(xp, xpgets[i]);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = xpgets[i]+" Erfahrung";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===3){
-				engets[i]=Math.floor(Math.pow(durs[i]/60*7,1.05));
-				goldcosts[i]=Math.floor(engets[i]*((maxenergy-98)+(engets[i]/2))/3);
-				//encosts[i]=Math.floor((engets[i]/2)*((maxenergy-80)+(engets[i]/2)));
-				encosts[i]=Math.floor(5*(Math.pow(maxenergy-99+engets[i],0.95)-Math.pow(maxenergy-99,0.95)));
+				engets[i]    = compTrain_gain_MEN(durs[i]);
+				goldcosts[i] = compTrain_cost_GO(maxenergy, engets[i]);
+				encosts[i]   = compTrain_cost_EN(maxenergy, engets[i]);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" max. Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = goldcosts[i]+" Gold, "+encosts[i]+" Energie";
 			}
 			
 			if (nextocc===4){
-				engets[i]=Math.floor(Math.pow(durs[i]/6*5,1.02));
+				engets[i] = compSleep_gain_EN(durs[i]);
 				
 				document.getElementById("lab_setocc_eff_"+i).innerHTML = engets[i]+" Energie";
 				document.getElementById("lab_setocc_cost_"+i).innerHTML = "0";
 			}
 		}
-		
 		
 		document.getElementById("r1").style.display="block";
 		document.getElementById("r2").style.display="table";
@@ -111,9 +112,10 @@ function setOccDur(newdur)
 
 function startOcc()
 {
+	var ret = false;
 	if (occ===0){
 		if (nextocc===1){
-			encost = Math.ceil(Math.pow(nextdur*1.2,0.98));
+			encost = compWork_cost_EN(nextdur);
 			if (energy >= encost){
 				var r = confirm("Das kostet dich "+encost+" Energie. Start?");
 				if (r){
@@ -122,7 +124,7 @@ function startOcc()
 					occ_startTime = Date.parse(new Date());
 					energy-=encost;
 					alert("Du arbeitest nun fuer "+occ_dur+" Minuten!");
-					return true;
+					ret = true;
 				}
 			}else{
 				alert("Nicht ausreichend Energie uebrig!");
@@ -130,8 +132,9 @@ function startOcc()
 		}
 		
 		if (nextocc===2){
-			encost   = Math.floor(1+Math.pow(nextdur/2.5,0.9));
-			goldcost = Math.floor(nextdur+((nextdur-1)*Math.pow(xp,1.2)+Math.pow(nextdur,2)/2)/20);
+			var xpget = compLearn_gain_XP(nextdur);
+			encost    = compLearn_cost_EN(nextdur);
+			goldcost  = compLearn_cost_GO(xp, xpget);
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -141,7 +144,7 @@ function startOcc()
 					energy -=encost;
 					gold -= goldcost;
 					alert("Du Lernst nun fuer "+occ_dur+" Minuten!");
-					return true;
+					ret = true;
 				}
 			}else{
 				if (energy < encost) alert("Nicht ausreichend Energie!");
@@ -150,9 +153,9 @@ function startOcc()
 		}
 		
 		if (nextocc===3){
-			var enget=Math.floor(Math.pow(nextdur/60*7,1.05));
-			goldcost=Math.floor(enget*((maxenergy-98)+(enget/2))/3);
-			encost=Math.floor(5*(Math.pow(maxenergy-99+enget,0.95)-Math.pow(maxenergy-99,0.95)));
+			var enget = compTrain_gain_MEN(nextdur);
+			goldcost  = compTrain_cost_GO(maxenergy, enget);
+			encost    = compTrain_cost_EN(maxenergy, enget);
 			if (energy >= encost && gold >= goldcost){
 				var r = confirm("Das kostet "+encost+" Energie und "+goldcost+" Gold. Start?");
 				if(r){
@@ -162,7 +165,7 @@ function startOcc()
 					energy -=encost;
 					gold -= goldcost;
 					alert("Du Trainierst nun fuer "+occ_dur+" Minuten!");
-					return true;
+					ret = true;
 				}
 			}else{
 				if (energy < encost) alert("Nicht ausreichend Energie!");
@@ -176,10 +179,15 @@ function startOcc()
 				occ_dur=nextdur;
 				occ_startTime = Date.parse(new Date());
 				alert("Du schlaefst nun fuer "+occ_dur+" Minuten!");
-				return true;
+				ret = true;
 			}
 		}
+		if (ret){
+			var fintime = Date.parse(new Date())+occ_dur*60*1000;
+			document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
+		}
 	}
+	return ret;
 }
 
 function startTimer()
@@ -201,25 +209,25 @@ function finishJob()
 	var finstr;
 	if (occ===1)
 	{
-		goldget=Math.floor(Math.pow(occ_dur*0.9,1.05)*(1+xp/240));
+		goldget = compWork_gain_GO(occ_dur, xp);
 		gold+=goldget;
 		finstr = "Fertig! Du erhaelst "+goldget+" Gold.";
 	}
 	if (occ===2)
 	{
-		xpget=Math.floor(occ_dur*5/6);
+		xpget = compLearn_gain_XP(occ_dur);
 		xp += xpget;
 		finstr = "Fertig! Du erhaelst "+xpget+" Erfahrung.";
 	}
 	if (occ===3)
 	{
-		enget=Math.floor(Math.pow(occ_dur/60*7,1.05));
+		enget = compTrain_gain_MEN(occ_dur);
 		maxenergy += enget;
 		finstr = "Fertig! Deine maximale Ernergie erhoeht sich um "+enget+".";
 	}
 	if (occ===4)
 	{
-		enget=Math.floor(Math.pow(occ_dur/6*5,1.02));
+		enget = compSleep_gain_EN(occ_dur);
 		if (energy+enget > maxenergy) enget = maxenergy-energy;
 		energy += enget;
 		finstr = "Fertig! Du regenerierst "+enget+" Energie.";
@@ -234,6 +242,8 @@ function finishJob()
 	document.getElementById("l2").style.display="table";
 	document.getElementById("l3").style.display="none";
 	
+	document.getElementById("title").innerHTML="MyFirstBrowserGame";
+	
 	updateLabel();
 	alert(finstr);
 }
@@ -244,6 +254,7 @@ function finishJob()
 
 function createMission()
 {
+	clearTimeout(curMissTimer);
 	var randTimeOffset = 30+Math.floor(30*Math.random());
 	var d= Date.parse(new Date());
 	curMissStart = d+(randTimeOffset*60*1000);
@@ -275,11 +286,16 @@ function executeMission()
 	Laden und Speichern
 */
 
-function save()
+function load_FromCookie()
 {
-	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy;
-	data = data+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
-	data = data+"-"+curMissStart+"-"+curMissAim;
+	var c = document.cookie;
+	var cdata = c.substring(5,c.length);
+	load(cdata);
+}
+
+function saveToCookie()
+{
+	var data = "Data="+encode(createSaveString());
 	
 	var expire = new Date(getDatePlus(1000*60*60*24*365));
 	data +="; expires="+expire.toGMTString();
@@ -288,11 +304,39 @@ function save()
 	alert("Spielstad gespeichert!");
 }
 
-function load()
+function load(cypherdata)
 {
-	var data=document.cookie;
+	var data = decode(cypherdata);
 	//alert(data);
-	var datas = data.split("-");
+	getDataFromString(data);
+	
+	updateLabel();
+	updateMissionLabel();
+	alert("Spielstand geladen!");
+}
+
+function exportData()
+{
+	alert(encode(createSaveString()));
+}
+
+function importData()
+{
+	var cdata = prompt("Exportierten Datenstring hier eingeben:");
+	load(cdata);
+}
+
+function createSaveString()
+{
+	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy;
+	data = data+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
+	data = data+"-"+curMissStart+"-"+curMissAim;
+	return data;
+}
+
+function getDataFromString(str)
+{
+	var datas = str.split("-");
 	gold   = parseInt(datas[1]);
 	xp     = parseInt(datas[2]);
 	dia    = parseInt(datas[3]);
@@ -302,7 +346,7 @@ function load()
 	occ_dur = parseInt(datas[7]);
 	occ_startTime = parseInt(datas[8]);
 	
-	var version = datas[0].split(".");
+	var version = datas[1].split(".");
 	var main = parseInt(version[0]);
 	var mile = parseInt(version[1]);
 	var step = parseInt(version[2]);
@@ -316,6 +360,8 @@ function load()
 		document.getElementById("l3").style.display="table";
 		document.getElementById("pan_cur_occ").innerHTML=getOccString(occ);
 		var worktimer = setInterval(function() {startTimer()},1000);
+		var fintime = Date.parse(new Date())+occ_dur*60*1000;
+		document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
 	}else{
 		document.getElementById("r1").style.display="none";
 		document.getElementById("r2").style.display="none";
@@ -336,10 +382,114 @@ function load()
 		curMissObj = "Energie";
 		}
 	}
+}
+
+/*
+	Verschluesselung mit vereinfachtem CBC-Mode
+	sodass Cypherstring in Cookie gespeichert werden kann
+*/
+
+function encode(data)
+{
+	var rkey;
+	var nextc;
+	var cipher = "";
 	
-	updateLabel();
-	updateMissionLabel();
-	alert("Spielstand geladen!");
+		
+	for (var i=0;i<data.length;i++){
+		if (i===0){
+			rkey = ((data.charCodeAt(i)-32)+skey)%91;
+		}else{
+			rkey = ((data.charCodeAt(i)-32)+rkey)%91;
+		}
+		nextc = rkey+32;
+		if (nextc===32) nextc = 123;
+		if (nextc===44) nextc = 124;
+		if (nextc===59) nextc = 125;
+		if (nextc===61) nextc = 126;
+		cipher = cipher + String.fromCharCode(nextc);
+	}
+	return cipher;
+}
+	
+function decode(cypher)
+{
+	var data = "";
+	var curc;
+	
+	for (var i=cypher.length-1; i>=0; i--){
+		curc = cypher.charCodeAt(i);
+		prefc = cypher.charCodeAt(i-1);
+		if (curc===123) curc = 32;
+		if (curc===124) curc = 44;
+		if (curc===125) curc = 59;
+		if (curc===126) curc = 61;
+		if (prefc===123) prefc = 32;
+		if (prefc===124) prefc = 44;
+		if (prefc===125) prefc = 59;
+		if (prefc===126) prefc = 61;
+		if (i>0){
+			m = (curc-prefc+91)%91+32;
+		}else{
+			m = (curc-skey+59)%91+32;
+		}
+		data = String.fromCharCode(m)+data;
+	}
+	return data;
+}
+
+/*
+	Berechnen von Kosten & Nutzen der Aktivitaeten
+*/
+
+function compWork_cost_EN(dur)
+{
+	return Math.ceil(Math.pow(dur*1.2,0.98));
+}
+
+function compLearn_cost_EN(dur)
+{
+	return Math.floor(1+Math.pow(dur/2,0.9));
+}
+
+function compLearn_cost_GO(curxp, xpget)
+{
+	//return Math.floor(dur+((dur-1)*Math.pow(curxp,1.5)+Math.pow(dur,1.2)/2)/20);
+	var xpg = curxp+xpget;
+	return Math.ceil((Math.pow(xpg,1.5)+xpg-Math.pow(curxp,1.5)-curxp)/5);
+}
+
+function compTrain_cost_EN(maxen, newen)
+{
+	return Math.floor(5*(Math.pow(maxen-99+newen,0.95)-Math.pow(maxen-99,0.95)));
+}
+
+function compTrain_cost_GO(maxen, newen)
+{
+	//return Math.floor(newen*((maxen-98)+(newen/2))/3);
+	var gesen = maxen-99+newen;
+	maxen -= 99;
+	return Math.ceil((Math.pow(gesen,1.9)+gesen-Math.pow(maxen,1.9)-maxen)/3);
+}
+
+function compWork_gain_GO(dur, curxp)
+{
+	return Math.floor(Math.pow(dur*0.9,1.05)*(1+curxp/240));
+}
+
+function compLearn_gain_XP(dur)
+{
+	return Math.floor(dur*5/6);
+}
+
+function compTrain_gain_MEN(dur)
+{
+	return Math.floor(Math.pow(dur/60*7,1.05));
+}
+
+function compSleep_gain_EN(dur)
+{
+	return Math.floor(Math.pow(dur/6*5,1.02));
 }
 
 /*
@@ -348,8 +498,8 @@ function load()
 
 function init()
 {
-	ver = "0.1.6";
-	vertext = "Challenging!";
+	ver = "0.1.7";
+	vertext = "Export & Import International!";
 	xp = 0;
 	gold = 0;
 	dia = 0;
@@ -359,6 +509,8 @@ function init()
 	nextocc = 0;
 	occ_dur = 0;
 	occ_startTime = Date.parse(new Date(0));
+	
+	skey = 42;
 	
 	missionTimeRange = 10;
 	missionAimRange = 10;
@@ -404,7 +556,7 @@ function updateMissionLabel()
 	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
 	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange)+".";
 	document.getElementById("but_Miss_exec").style.display="none";
-	setTimeout(function() {criticalMissionTime();}, timeOffset);
+	curMissTimer = setTimeout(function() {criticalMissionTime();}, timeOffset);
 }
 
 function getTimeString(timeInMS)
