@@ -289,8 +289,15 @@ function executeMission()
 function load_FromCookie()
 {
 	var c = document.cookie;
-	var cdata = c.substring(5,c.length);
-	load(cdata);
+	if (c.substring(0,5)==="Data="){
+		var cdata = c.substring(5,c.length);
+		load(decode(cdata));
+	}else{
+		load(c);
+		var d = new Date(0);
+		document.cookie = "reset; expires="+d.toGMTString();
+		saveToCookie();
+	}
 }
 
 function saveToCookie()
@@ -304,9 +311,9 @@ function saveToCookie()
 	alert("Spielstad gespeichert!");
 }
 
-function load(cypherdata)
+function load(data)
 {
-	var data = decode(cypherdata);
+	var data = data;
 	//alert(data);
 	getDataFromString(data);
 	
@@ -323,7 +330,7 @@ function exportData()
 function importData()
 {
 	var cdata = prompt("Exportierten Datenstring hier eingeben:");
-	load(cdata);
+	load(decode(cdata));
 }
 
 function createSaveString()
