@@ -367,7 +367,7 @@ function getDataFromString(str)
 		document.getElementById("l3").style.display="table";
 		document.getElementById("pan_cur_occ").innerHTML=getOccString(occ);
 		var worktimer = setInterval(function() {startTimer()},1000);
-		var fintime = Date.parse(new Date())+occ_dur*60*1000;
+		var fintime = occ_startTime+occ_dur*60*1000;
 		document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
 	}else{
 		document.getElementById("r1").style.display="none";
