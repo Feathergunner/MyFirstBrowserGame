@@ -6,18 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="format.css">
 </head>
 <body>
-	
 	<div class="head">
-		<marquee><h1>Hallo! Willkommen bei MyFirstBrowserGame.</h1></marquee>
+		<marquee><h2>Hallo! Willkommen bei MyFirstBrowserGame.</h1></marquee>
 		<h6 id="label_version">init</h6>
 	</div>
 	
 	<div class="top">
-		<p>Arbeite, um Geld zu verdienen.</p>
-		<p>Lerne, um mehr Geld zu verdienen.</p>
-		<p>Trainiere, um mehr Energie zu bekommen.</p>
-		<p>Schlafe, um verlorene Energie zu regenerieren.</p>
-		<p>Erf&uumllle Auftr&aumlge, um Diamanten zu bekommen.</p>
 		<table width=100%>
 			<colgroup>
 				<col width=20%>
@@ -42,85 +36,160 @@
 		</table>
 	</div>
 	
-	<div class="left">
-		<table id="l1" width=100%><caption>Spielstand</caption>
-			<tr>
-			<td><input type="button" onclick="saveToCookie()" value="Speichern"></td>
-			<td><input type="button" onclick="exportData()" value="Exportieren"></td>
-			</tr><tr>
-			<td><input type="button" onclick="load_FromCookie()" value="Laden"></td>
-			<td><input type="button" onclick="importData()" value="Importieren"></td>
-			</tr>
+	<div class="menu">
+		<h2>Men&uuml</h2>
+		<table width=100%>
+			<tr><td>
+				<input type="button" onclick="menuMain(1)" value="Aktionen">
+			</td></tr>
+			<tr><td>
+				<input type="button" onclick="menuMain(2)" value="Aufgaben">
+			</td></tr>
+			<tr><td>
+				<input type="button" onclick="menuMain(3)" value="Shop">
+			</td></tr>
+			<tr><td>
+				<input type="button" onclick="menuMain(4)" value="Spielstand">
+			</td></tr>
+			<tr><td>
+				<input type="button" onclick="menuMain(5)" value="Hilfe">
+			</td></tr>
 		</table>
 		
-		<table id="l2" width=100%><caption>Aktionen</caption>
-		<tr>
-			<td><input type="button" onclick="chooseNextOcc(1)" value="Arbeiten" id="but_l1"></td>
-			<td><input type="button" onclick="chooseNextOcc(2)" value="Lernen" id="but_l1"></td>
-		</tr><tr>
-			<td><input type="button" onclick="chooseNextOcc(3)" value="Trainieren" id="but_l1"></td>
-			<td><input type="button" onclick="chooseNextOcc(4)" value="Schlafen" id="but_l1"></td>
-		</tr></table>
+		<h4>Spass by:</h4>
+		<p>Ango</p>
+		<h5>08/14</h5>
+	</div>
+	
+	<div class="main">
+		<div id="main_act">
+			<div id="main_act_choose_occ">
+				<h4>Aktionen</h4>
+				<table id="l2" width=100%>
+					<tr>
+						<td><input type="button" onclick="chooseNextOcc(1)" value="Arbeiten" id="but_l1"></td>
+						<td><input type="button" onclick="chooseNextOcc(2)" value="Lernen" id="but_l1"></td>
+					</tr><tr>
+						<td><input type="button" onclick="chooseNextOcc(3)" value="Trainieren" id="but_l1"></td>
+						<td><input type="button" onclick="chooseNextOcc(4)" value="Schlafen" id="but_l1"></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="main_act_choose_dur">
+				<h4 id="main_act_lab_act">curocc</h4>
+				<table id="activity_table" width=90%>
+				<tr>
+					<th align="center">Dauer:</th><th align="center">Gewinn:</th><th align="center">Kosten:</th>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(10)" value="10 Minuten"></td>
+					<td id="lab_setocc_eff_1"></td>
+					<td id="lab_setocc_cost_1"></td>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(30)" value="30 Minuten"></td>
+					<td id="lab_setocc_eff_2"></td>
+					<td id="lab_setocc_cost_2"></td>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(60)" value="1 Stunde"></td>
+					<td id="lab_setocc_eff_3"></td>
+					<td id="lab_setocc_cost_3"></td>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(120)" value="2 Stunden"></td>
+					<td id="lab_setocc_eff_4"></td>
+					<td id="lab_setocc_cost_4"></td>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(240)" value="4 Stunden"></td>
+					<td id="lab_setocc_eff_5"></td>
+					<td id="lab_setocc_cost_5"></td>
+				</tr><tr>
+					<td><input type="button" onclick="setOccDur(480)" value="8 Stunden"></td>
+					<td id="lab_setocc_eff_6"></td>
+					<td id="lab_setocc_cost_6"></td>
+				</tr>
+				</table>
+			</div>
+			
+			<div id="main_act_show_dur">
+				<table>
+					<tr>
+						<td><h5>Aktuelle T&aumltigkeit:</h5></td>
+						<td align="right" id="pan_cur_occ"></td>
+					</tr><tr>
+						<td><h5>Verbleibende Zeit:</h5></td>
+						<td align="right" id="pan_cur_rest"></td>
+					</tr>
+				</table>
+			</div>		
+		</div>
 		
-		<table id="l3" width=100%><tr>
-			<td><h5>Aktuelle T&aumltigkeit:</h5></td>
-			<td align="right" id="pan_cur_occ"></td>
-		</tr><tr>
-			<td><h5>Verbleibende Zeit:</h5></td>
-			<td align="right" id="pan_cur_rest"></td>
-		</tr></table>
-		
-		<div id="l4">
-			<h4>Auftrag:</h4>
-			<table class="mission" width = 100%><tr>
-				<td align="left">Erf&uumllle im Zeitfenster:</td>
-			</tr><tr>
-				<td align="right" id="pan_cur_miss_time"></td>
-			</tr><tr>
-				<td align="left">die Bedingung:</td>
-			</tr><tr>
-				<td align="right" id="pan_cur_miss_obj"></td>
-			</tr></table>
+		<div id="main_miss">
+			<h4>Aktueller Auftrag:</h4>
+			<table class="mission" width = 100%>
+				<tr>
+					<td align="left">Erf&uumllle im Zeitfenster:</td>
+				</tr><tr>
+					<td align="right" id="pan_cur_miss_time"></td>
+				</tr><tr>
+					<td align="left">die Bedingung:</td>
+				</tr><tr>
+					<td align="right" id="pan_cur_miss_obj"></td>
+				</tr>
+			</table>
 			<input type="button" onclick="executeMission()" value="Auftrag abgeben" id ="but_Miss_exec">
 		</div>
+		
+		<div id="main_shop">
+			<h4>Shop</h4>
+			<table id="inventory_table" width=90%>
+				<tr>
+					<th align="center">Item:</th><th align="center">Info:</th><th align="center">Kosten:</th><th align="center">Benutzen:</th>
+				</tr><tr>
+					<td id="inv_it_lab_1"></td>
+					<td><input type="button" onclick="getItemInfo(1)" value="Info"></td>
+					<td id="inv_it_cost_1"></td>
+					<td><input type="button" onclick="useItem(1)" value="Benutzen!"></td>
+				</tr><tr>
+					<td id="inv_it_lab_2"></td>
+					<td><input type="button" onclick="getItemInfo(2)" value="Info"></td>
+					<td id="inv_it_cost_2"></td>
+					<td><input type="button" onclick="useItem(2)" value="Benutzen!"></td>
+				</tr><tr>
+					<td id="inv_it_lab_3"></td>
+					<td><input type="button" onclick="getItemInfo(3)" value="Info"></td>
+					<td id="inv_it_cost_3"></td>
+					<td><input type="button" onclick="useItem(3)" value="Benutzen!"></td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="main_sav">
+			<h4>Spielstand</h4>
+			<table width=100%>
+				<tr>
+					<td>Speichern:</td>
+					<td><input type="button" onclick="saveToCookie()" value="Im Browser"></td>
+					<td><input type="button" onclick="exportData()" value="Exportieren"></td>
+				</tr><tr>
+					<td>Laden:</td>
+					<td><input type="button" onclick="load_FromCookie()" value="Von Browser"></td>
+					<td><input type="button" onclick="importData()" value="Importieren"></td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="main_help">
+			<h4>Hinweise</h4>
+			<p>Arbeite, um Geld zu verdienen.</p>
+			<p>Lerne, um mehr Geld zu verdienen.</p>
+			<p>Trainiere, um mehr Energie zu bekommen.</p>
+			<p>Schlafe, um verlorene Energie zu regenerieren.</p>
+			<p>Erf&uumllle Auftr&aumlge, um Diamanten zu bekommen.</p>
+			<p>Kaufe dir f&uumlr Diamanten Upgrades im Shop!</p>
+		</div>
 	</div>
-	
-	<div class="activity">
-		<h3 id="r1">W&aumlhle die Dauer deiner Aktivit&aumlt:</h3>
-		<table id="r2" width=90%>
-		<tr>
-			<th align="center">Dauer:</th><th align="center">Gewinn:</th><th align="center">Kosten:</th>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(10)" value="10 Minuten"></td>
-			<td id="lab_setocc_eff_1"></td>
-			<td id="lab_setocc_cost_1"></td>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(30)" value="30 Minuten"></td>
-			<td id="lab_setocc_eff_2"></td>
-			<td id="lab_setocc_cost_2"></td>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(60)" value="1 Stunde"></td>
-			<td id="lab_setocc_eff_3"></td>
-			<td id="lab_setocc_cost_3"></td>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(120)" value="2 Stunden"></td>
-			<td id="lab_setocc_eff_4"></td>
-			<td id="lab_setocc_cost_4"></td>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(240)" value="4 Stunden"></td>
-			<td id="lab_setocc_eff_5"></td>
-			<td id="lab_setocc_cost_5"></td>
-		</tr><tr>
-			<td><input type="button" onclick="setOccDur(480)" value="8 Stunden"></td>
-			<td id="lab_setocc_eff_6"></td>
-			<td id="lab_setocc_cost_6"></td>
-		</tr>
-		</table>
-		<p id="r3">W&aumlhle eine Aktivit&aumlt!</p>
-	</div>
-	
+
 </body>
 <script type="text/javascript">
 	init();
 </script>
-</html> 
+</html>

@@ -3,26 +3,28 @@
 }
 
 html{
-	background-color:#002000;
+	background-color:#001000;
 }
 
 .head{
-	background-color:#008000;
+	background-color:#009900;
 	margin-left: 1%;
 	margin-top: 20px;
 	margin-right: 1%;
 	
-	width: 98%;
-	
 	text-align:center;
 	
-	height: 120px;
+	/*width: 98%;*/
+	padding-left: 1%;
+	padding-right: 1%;
+	
+	height: 110px;
 	border: 3px solid #206020;
 	border-radius: 20px;
 }
 
 .top{
-	background-color:#101010;
+	background-color:#000000;
 	border: 3px solid #0000FF;
 	border-radius: 5px;
 	
@@ -30,11 +32,19 @@ html{
 	margin-top: 20px;
 	margin-right: 1%;
 	
-	width: 98%;
+	/*width: 98%;*/
+	padding-left: 1%;
+	padding-right: 1%;
 	
 	text-align:center;
+	color:#00FF00;
+	font-size: 15px;
 }
 
+.top td{
+	width: 10%;
+}
+/*
 .top>*{
 	color:#00FF00;
 	font-size: 15px;
@@ -42,8 +52,8 @@ html{
 	margin-right: auto;
 	text-align: center;
 }
-
-.left{
+*/
+.menu{
 	background-color:#000000;
 	border: 3px solid #0000FF;
 	border-radius: 5px;
@@ -54,20 +64,58 @@ html{
 	
 	padding: 10px 1% 10px 1%;
 	
-	height: 500px;
-	width: 30%;
+	height: 600px;
+	width: 20%;
 	
 	text-align:center;
-}
-.left>*{
+	
 	color: #00FF00;
-	font-size: 20px;
+	font-size: 15px;
+	/*
 	margin-left: auto;
 	margin-right: auto;
+	*/
 	text-align: center;
 }
 
-input[type=button]{
+.menu input[type=button]{
+	background-color: #002222;
+	color: #00CC00;
+	width: 90%;
+	box-shadow: 0px 0px 5px 5px #005500;
+	border: 1px solid #00FF00;
+	border-radius: 15px;
+	font-size: 18px;
+	text-align: center;
+	
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	
+	padding-bottom:5px;
+	padding-top:5px;
+}
+
+.main{
+	background-color: #000000;
+	border: 3px solid #0000FF;
+	border-radius: 5px;
+	margin-top:1%;
+	margin-right:1%;
+	padding: 10px 1% 10px 1%;
+	
+	font-size: 18px;
+	color:#00EE00;
+	
+	height: 600px;
+	width: 71%;
+	float:right;
+	
+	text-align:center;
+}
+
+.main input[type=button]{
 	background-color: #000050;
 	color: #00CC00;
 	box-shadow: 0px 0px 2px 2px #00A000;
@@ -79,26 +127,35 @@ input[type=button]{
 	text-align: center;
 }
 
-.activity{
-	background-color: #000000;
-	border: 3px solid #0000FF;
-	border-radius: 5px;
-	margin-top:1%;
-	margin-right:1%;
-	padding: 10px 1% 10px 1%;
-	
-	font-size: 18px;
-	color:#20FF20;
-	
-	height: 500px;
-	
-	width: 60%;
-	float:right;
-	
-	text-align:center;
+.main th{
+	font-size: 15px;
 }
 
-#l4{
+.main table{
+	width: 100%;
+}
+
+#main_act input[type=button]{
+	width: 90%;
+}
+
+#main_act_choose_dur th,td{
+	width: 33%;
+}
+
+#main_sav input[type=button]{
+	width: 90%;
+}
+
+#main_shop input[type=button]{
+	width: 90%;
+}
+
+#main_shop td{
+	width: 25%;
+}
+
+#m_sub{
 	width:92%;
 	margin: 2% 2% 2% 2%;
 	border: 1px solid #004000;

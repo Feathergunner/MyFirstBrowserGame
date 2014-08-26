@@ -14,6 +14,9 @@ var missionTimeRange;
 var missionAimRange;
 var curMissTimer;
 
+var missionBonus;
+var sleepBonus;
+
 var occ;
 /*
 	0 = none
@@ -30,6 +33,8 @@ var nextdur;
 
 var skey;
 
+var itemcost = [0,1,2,3];
+
 /*
 	Auswahl und Durchfuehrung von Aktivitaeten
 */
@@ -38,6 +43,7 @@ function chooseNextOcc(newocc)
 {
 	nextocc = newocc;
 	if (occ===0){
+		document.getElementById("main_act_lab_act").innerHTML=getOccString(nextocc)+":";
 		var durs = [0, 10, 30, 60, 120, 240, 480];
 		var encosts   = [0];
 		var engets    = [0];
@@ -81,10 +87,6 @@ function chooseNextOcc(newocc)
 			}
 		}
 		
-		document.getElementById("r1").style.display="block";
-		document.getElementById("r2").style.display="table";
-		document.getElementById("r3").style.display="none";
-		
 	}else{
 		var rest = myround(occ_dur-((time-occ_startTime)/60000),1);
 		alert("Du bist bereits beschaeftigt: "+getOccString(occ)+", noch "+rest+" Minuten!");
@@ -98,16 +100,12 @@ function setOccDur(newdur)
 	if(s){
 		updateLabel();
 	
-		document.getElementById("r1").style.display="none";
-		document.getElementById("r2").style.display="none";
-		document.getElementById("r3").style.display="none";
+		//document.getElementById("activity").style.display="none";
+		setMain_act_menu_occ();
 	
-		document.getElementById("l2").style.display="none";
-		document.getElementById("l3").style.display="table";
 		document.getElementById("pan_cur_occ").innerHTML=getOccString(occ);
 		var worktimer = setInterval(function() {startTimer()},1000);
 	}
-	//var testtimer = setInterval(function() {alert("timetest")},1000);
 }
 
 function startOcc()
@@ -237,14 +235,10 @@ function finishJob()
 	occ_startTime = Date.parse(new Date(0));
 	nextocc=0;
 	
-	document.getElementById("r3").style.display="inline";
-	
-	document.getElementById("l2").style.display="table";
-	document.getElementById("l3").style.display="none";
-	
 	document.getElementById("title").innerHTML="MyFirstBrowserGame";
 	
 	updateLabel();
+	setMain_act_menu_lazy();
 	alert(finstr);
 }
 
@@ -259,7 +253,7 @@ function createMission()
 	var d= Date.parse(new Date());
 	curMissStart = d+(randTimeOffset*60*1000);
 	curMissObj = "Energie";
-	curMissAim = 10+Math.floor((maxenergy-20)*Math.random());
+	curMissAim = 10+Math.floor((maxenergy-10-missionBonus)*Math.random());
 	
 	updateMissionLabel()
 }
@@ -267,14 +261,14 @@ function createMission()
 function criticalMissionTime()
 {
 	document.getElementById("but_Miss_exec").style.display="inline";
-	itv = setTimeout(function() {createMission();}, missionTimeRange*60*1000);
+	itv = setTimeout(function() {createMission();}, (missionTimeRange+missionBonus)*60*1000);
 }
 
 function executeMission()
 {
-	if (energy>=curMissAim && energy <= curMissAim+missionAimRange){
-		dia+=1;
-		alert("Mission erfolgreich erfuellt. Du erhaelst 1 Diamanten!");
+	if (energy>=curMissAim && energy <= curMissAim+(missionAimRange+missionBonus)){
+		dia+=2;
+		alert("Mission erfolgreich erfuellt. Du erhaelst 2 Diamanten!");
 	}else{
 		alert("Missionsbedingungen wurden nicht erfuellt!");
 	}
@@ -317,6 +311,13 @@ function load(data)
 	//alert(data);
 	getDataFromString(data);
 	
+	if (occ>0){
+		document.getElementById("pan_cur_occ").innerHTML=getOccString(occ);
+		var worktimer = setInterval(function() {startTimer()},1000);
+		var fintime = occ_startTime+occ_dur*60*1000;
+		document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
+	}
+	
 	updateLabel();
 	updateMissionLabel();
 	alert("Spielstand geladen!");
@@ -324,7 +325,7 @@ function load(data)
 
 function exportData()
 {
-	alert(encode(createSaveString()));
+	prompt("Speichere diese Zeichenkette:", encode(createSaveString()));
 }
 
 function importData()
@@ -338,6 +339,7 @@ function createSaveString()
 	var data = ver+"-"+gold+"-"+xp+"-"+dia+"-"+energy+"-"+maxenergy;
 	data = data+"-"+occ+"-"+occ_dur+"-"+occ_startTime;
 	data = data+"-"+curMissStart+"-"+curMissAim;
+	data = data+"-"+missionBonus+"-"+sleepBonus;
 	return data;
 }
 
@@ -358,26 +360,6 @@ function getDataFromString(str)
 	var mile = parseInt(version[1]);
 	var step = parseInt(version[2]);
 	
-	if(occ>0){
-		document.getElementById("r1").style.display="none";
-		document.getElementById("r2").style.display="none";
-		document.getElementById("r3").style.display="none";
-	
-		document.getElementById("l2").style.display="none";
-		document.getElementById("l3").style.display="table";
-		document.getElementById("pan_cur_occ").innerHTML=getOccString(occ);
-		var worktimer = setInterval(function() {startTimer()},1000);
-		var fintime = occ_startTime+occ_dur*60*1000;
-		document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
-	}else{
-		document.getElementById("r1").style.display="none";
-		document.getElementById("r2").style.display="none";
-		document.getElementById("r3").style.display="none";
-		
-		document.getElementById("l2").style.display="table";
-		document.getElementById("l3").style.display="none";
-	}
-	
 	if (main===0 && mile <=1 && step<6){
 		createMission();
 	}else{
@@ -389,6 +371,17 @@ function getDataFromString(str)
 		curMissObj = "Energie";
 		}
 	}
+	if (main > 0 || mile >= 2){
+		missionBonus = parseInt(datas[11]);
+		sleepBonus = parseInt(datas[12]);
+	}
+	if (isNaN(missionBonus)){
+		missionBonus = 0;
+	}
+	if (isNaN(sleepBonus)){
+		sleepBonus = 0;
+	}
+		
 }
 
 /*
@@ -476,7 +469,7 @@ function compTrain_cost_GO(maxen, newen)
 	//return Math.floor(newen*((maxen-98)+(newen/2))/3);
 	var gesen = maxen-99+newen;
 	maxen -= 99;
-	return Math.ceil((Math.pow(gesen,1.9)+gesen-Math.pow(maxen,1.9)-maxen)/3);
+	return Math.ceil((Math.pow(gesen,1.6)+gesen-Math.pow(maxen,1.6)-maxen)/1.7);
 }
 
 function compWork_gain_GO(dur, curxp)
@@ -491,46 +484,134 @@ function compLearn_gain_XP(dur)
 
 function compTrain_gain_MEN(dur)
 {
-	return Math.floor(Math.pow(dur/60*7,1.05));
+	return Math.floor(Math.pow(dur/60*12.5,1.00));
 }
 
 function compSleep_gain_EN(dur)
 {
-	return Math.floor(Math.pow(dur/6*5,1.02));
+	return Math.floor(Math.pow(dur/6*5,1.02)*(1+sleepBonus));
 }
 
 /*
-	Hilfsfunktionen
+	Inventar und Shop:
 */
 
-function init()
+function getItemCost(it)
 {
-	ver = "0.1.7";
-	vertext = "Export & Import International!";
-	xp = 0;
-	gold = 0;
-	dia = 0;
-	maxenergy=100;
-	energy = maxenergy;
-	occ = 0;
-	nextocc = 0;
-	occ_dur = 0;
-	occ_startTime = Date.parse(new Date(0));
+	return itemcost[it];
+}
+
+function useItem(it)
+{
+	if (it === 1 && occ<=0){
+		alert("Das haette keine Wirkung!");
+	}else{
+		if (dia >= getItemCost(it)){
+			var r = confirm("Das kostet "+getItemCost(it)+" Diamanten. Okay?");
+			if (r){
+				dia -= getItemCost(it);
+				applyItemEffect(it);
+			}
+		}else{
+			alert("Nicht ausreichend Diamanten!");
+		}
+	}
+}
+
+function applyItemEffect(it)
+{
+	if (it===1){
+		if (occ>0){
+			occ_startTime -= 1000*60*60;
+			
+			var fintime = occ_startTime+occ_dur*60*1000;
+			document.getElementById("title").innerHTML="MFBG - "+getOccString(occ)+" bis "+getTimeString(fintime)+" Uhr";
+		}
+	}
+	if (it===2){
+		sleepBonus += 0.5;
+	}
+	if (it===3){
+		missionBonus += 5;
+	}
+}
+
+function getItemInfo(it)
+{
+	var str;
+	if (it===1)
+		str = "Der Energydrink laesst dich effektiver Arbeiten. Die Dauer deiner aktuellen(!) Taetigkeit verkuerzt sich um eine Stunde - der Gewinn bleibt gleich!";
+	if (it===2)
+		str = "Tee laesst dich besser schlafen! Du regenerierst beim Schlafen in Zukunft 50% mehr Energie!";
+	if (it===3)
+		str = "Ruhm vereinfacht deine Missionen: du hast 5 Minuten mehr Zeit, und das Missionszielintervall wird 5 Punkte groesser!";
+	alert(str);
+}
+
+/*
+	Darstellung und Menu:
+*/
+
+function menuMain(id)
+{
+	/*
+		1: Aktion
+		2: Mission
+		3: Shop
+		4: Spielstand
+		5: Hilfe
+	*/
 	
-	skey = 42;
-	
-	missionTimeRange = 10;
-	missionAimRange = 10;
-	createMission();
-	
-	updateLabel();
-	
-	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
-	
-	document.getElementById("r1").style.display="none";
-	document.getElementById("r2").style.display="none";
-	
-	document.getElementById("l3").style.display="none";
+	document.getElementById("main_act").style.display="none";
+	document.getElementById("main_miss").style.display="none";
+	document.getElementById("main_shop").style.display="none";
+	document.getElementById("main_sav").style.display="none";
+	document.getElementById("main_help").style.display="none";
+	if (id===1){
+		document.getElementById("main_act").style.display="block";
+		if (occ===0){
+			setMain_act_menu_lazy();
+		}
+		else{
+			setMain_act_menu_occ();
+		}
+	}
+	if (id===2){
+		document.getElementById("main_miss").style.display="block";
+	}
+	if (id===3){
+		document.getElementById("main_shop").style.display="block";
+		showInventory();
+	}
+	if (id===4){
+		document.getElementById("main_sav").style.display="block";
+	}
+	if (id===5){
+		document.getElementById("main_help").style.display="block";
+	}
+}
+
+function setMain_act_menu_lazy()
+{
+	document.getElementById("main_act_choose_occ").style.display="block";
+	document.getElementById("main_act_choose_dur").style.display="block";
+	document.getElementById("main_act_show_dur").style.display="none";
+	chooseNextOcc(1);
+}
+
+function setMain_act_menu_occ()
+{
+	document.getElementById("main_act_choose_occ").style.display="none";
+	document.getElementById("main_act_choose_dur").style.display="none";
+	document.getElementById("main_act_show_dur").style.display="table";
+}
+
+function showInventory()
+{	
+	for (i=1;i<4;i++){
+		document.getElementById("inv_it_lab_"+i).innerHTML=getItemString(i);
+		document.getElementById("inv_it_cost_"+i).innerHTML=getItemCost(i)+" Diamanten";
+	}
 }
 
 function getOccString(occ)
@@ -547,6 +628,18 @@ function getOccString(occ)
 		return "Schlafen";
 }
 
+function getItemString(it)
+{
+	if (it===0)
+		return "none";
+	if (it===1)
+		return "Energydrink";
+	if (it===2)
+		return "Tee";
+	if (it===3)
+		return "Ruhm";
+}
+
 function updateLabel()
 {
 	document.getElementById("pan_xp").innerHTML = xp;
@@ -559,9 +652,9 @@ function updateMissionLabel()
 {
 	var timeOffset = curMissStart - Date.parse(new Date());
 	var startTime = getTimeString(curMissStart);
-	var endTime = getTimeString(curMissStart+missionTimeRange*60*1000);
+	var endTime = getTimeString(curMissStart+(missionTimeRange+missionBonus)*60*1000);
 	document.getElementById("pan_cur_miss_time").innerHTML = startTime+" - "+endTime;
-	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange)+".";
+	document.getElementById("pan_cur_miss_obj").innerHTML = curMissObj+" zwischen: "+curMissAim+" - "+(curMissAim+missionAimRange+missionBonus)+".";
 	document.getElementById("but_Miss_exec").style.display="none";
 	curMissTimer = setTimeout(function() {criticalMissionTime();}, timeOffset);
 }
@@ -576,17 +669,45 @@ function getTimeString(timeInMS)
 	return hours+":"+minutes;
 }
 
+/*
+	Hilfsfunktionen
+*/
+
+function init()
+{
+	ver = "0.2.0";
+	vertext = "Items!";
+	xp = 0;
+	gold = 0;
+	dia = 0;
+	maxenergy=100;
+	energy = maxenergy;
+	occ = 0;
+	nextocc = 0;
+	occ_dur = 0;
+	occ_startTime = Date.parse(new Date(0));
+	
+	skey = 42;
+	
+	missionBonus = 0;
+	sleepBonus = 0;
+	
+	missionTimeRange = 10;
+	missionAimRange = 10;
+	createMission();
+	
+	menuMain(1);
+	
+	updateLabel();
+	
+	document.getElementById("label_version").innerHTML= "Ver. "+ver+" "+vertext;
+	
+	showActivityTable(0);
+	document.getElementById("l3").style.display="none";
+}
+
 function myround(a,b)
 {
-	/*
-	Old:
-	if (b===0) return Math.floor(a);
-	else{
-		var t1 = Math.pow(10,b);
-		var t2 = Math.floor(a*t1);
-		return (t2/t1);
-	}
-	*/
 	return a.toFixed(b);
 }
 
